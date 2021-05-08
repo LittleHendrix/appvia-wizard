@@ -11,8 +11,8 @@ export function Form({children, id}) {
     const [ inputValues, setInputValues ] = React.useState(ctxInputValues);
     const userFormFields = formFields[id];
     
-    const dispatchErrors = (key, errMsg) => {
-        dispatch({ type: actions.ERROR, payload: { key, value: errMsg }});
+    const dispatchErrors = (key, err) => {
+        dispatch({ type: actions.ERROR, payload: { key, value: err }});
     }
     // find if any errors exists for inputs in the current form
     let hasClientSideErr = checkClientSideErrors(errors, ctxInputValues);
@@ -36,7 +36,7 @@ export function Form({children, id}) {
         if (!hasClientSideErr) {
             const url = isLast ? `${baseURL}${import.meta.env.VITE_API_SUMMARY}` : `${baseURL}${import.meta.env.VITE_API_VALIDATE}`;
             const plainFormData = isLast ? { ...cleanObj(ctxInputValues), pass: true } : Object.fromEntries(data.entries());
-            
+
             if (id === actions.FEATURES) {
                 // process Switch differently than other native form inputs
                 dispatch({ type: dispatchAction, payload: cleanObj(inputValues) });
@@ -61,7 +61,7 @@ export function Form({children, id}) {
                     if (isValid || success) {
                         setIsSending(false);
                         dispatchErrors('name', '');
-                        messenger('success', 'Update successful', { duration: 1 });
+                        messenger('success', 'Store update successful', { duration: 1 });
                         if (isLast) {
                             dispatch({ type: actions.SUMMARY });
                         } else {
@@ -77,7 +77,7 @@ export function Form({children, id}) {
                     console.error(err);
                     setIsSending(false);
                     messenger('error', err.message, { duration: 2 });
-                    dispatchErrors('name', err.message);
+                    dispatchErrors('name', { type: 'server', msg: err.message });
                 });
             }
         } else {
@@ -120,12 +120,12 @@ export function Form({children, id}) {
                 const { isSetable } = jsonRes;
                 setIsEnabling(false);
                 dispatchErrors(key, '');
-                messenger('success', 'Update successful', { duration: 1 });
+                messenger('success', 'Store update successful', { duration: 1 });
                 setInputValues({ ...inputValues, [key]: isSetable });
             }).catch(err => {
                 console.error(err);
                 messenger('error', err.message, { duration: 2 });
-                dispatchErrors(key, err.message);
+                dispatchErrors(key, { type: 'server', msg: err.message });
             });
         }
     }

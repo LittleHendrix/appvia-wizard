@@ -1,5 +1,5 @@
 import React from 'react';
-import { Input, Switch, Alert } from 'antd';
+import { Input, Switch, Alert, Tooltip } from 'antd';
 import { CloseOutlined, CheckOutlined } from '@ant-design/icons';
 
 const Field = ({ type, ...restProps}) => {
@@ -34,12 +34,14 @@ export const FormField = ({ id, label, type, required, error, value, onChangeHan
     <div className="form-row">
       <div className={isSwitch ? 'field-container checkbox' : 'field-container'} data-testid={`${id}-input`}>
         <div className="label-container">
-          <label htmlFor={id}>{label}</label>
+          {id === 'name'
+            ? <Tooltip title="Name must not exceed 63 characters in length"><label htmlFor={id}>{label}</label></Tooltip> 
+            : <label htmlFor={id}>{label}</label>}
           {required && <sup>*</sup>}
         </div>
         <Field {...fieldProps} />
       </div>
-      {error && <Alert message={error} type="error" showIcon data-testid={`${id}-error`} />}
+      {error && <Alert message={error.msg} type="error" showIcon data-testid={`${id}-error`} />}
     </div>
   )
 }

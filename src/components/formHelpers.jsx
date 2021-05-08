@@ -14,7 +14,7 @@ export const validate = (key, value, schema, cb) => {
     for (let [rgx, errMsg] of schema) {
         noErrors = value.match(rgx) !== null;
         if (cb) {
-            noErrors ? cb(key, '') : cb(key, errMsg);
+            noErrors ? cb(key, '') : cb(key, { type: 'validation', msg: errMsg });
         }
         if (!noErrors) {
             // break as soon as one condition fails to prevent overwriting error message
@@ -49,6 +49,6 @@ export const messenger = (type = 'info', msg = '', opts = {}) => {
 
 export const checkClientSideErrors = (errors = new Map(), inputValues = {}) => {
     const formErr = [...errors.entries()]
-        .filter(([key, errMsg]) => Object.keys(inputValues).includes(key) && errMsg !== '' && !errMsg.toLowerCase().includes('server'));
+        .filter(([key, err]) => Object.keys(inputValues).includes(key) && err !== '' && err.type !== 'server');
     return formErr.length > 0;
 }
