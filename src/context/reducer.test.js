@@ -13,13 +13,18 @@ describe('reducer', () => {
         expect(step).toEqual(0);
     });
 
-    test('should mark isLast as true when reaches the end of the journey', () => {
-        const { isLast } = reducer(initialState, { type: actions.SUMMARY });
+    test('should mark isLast as true when reaches the end of collection form', () => {
+        const { isLast } = reducer(initialState, { type: actions.REVIEW });
         expect(isLast).toEqual(true);
     });
 
+    test('should mark done as true when reaches the end of the journey', () => {
+        const { done } = reducer(initialState, { type: actions.SUMMARY });
+        expect(done).toEqual(true);
+    });
+
     test('should update user form input values', () => {
-        const { inputValues } = reducer(initialState, { type: actions.USER_FORM, payload: [[ 'name', 'My name'], [ 'email', 'me@me.com' ], [ 'password', 'SuperLucky13' ]] });
+        const { inputValues } = reducer(initialState, { type: actions.USER, payload: { 'name': 'My name', 'email': 'me@me.com', 'password': 'SuperLucky13' }});
         expect(inputValues).toEqual(expect.objectContaining({
             name: 'My name',
             email: 'me@me.com',
@@ -28,10 +33,10 @@ describe('reducer', () => {
     });
 
     test('should update feature selection form input values', () => {
-        const { inputValues } = reducer(initialState, { type: actions.FEATURES_FORM, payload: [[ 'koreAWS', 'true'], [ 'koreGCP', 'false' ]] });
+        const { inputValues } = reducer(initialState, { type: actions.FEATURES, payload: {'koreAWS': true, koreGCP: false } });
         expect(inputValues).toEqual(expect.objectContaining({
-            koreAWS: 'true',
-            koreGCP: 'false'
+            koreAWS: true,
+            koreGCP: false
         }));
     });
 
