@@ -33,6 +33,7 @@ export function FormContainer() {
   },[]);
 
   if (done) {
+    console.table(ctxInputValues);
     return (
       <Result
         status="success"
