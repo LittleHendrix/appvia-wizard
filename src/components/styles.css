@@ -44,3 +44,8 @@
 .form-row #prev {
     margin-right: 8px;
 }
+
+.result-item:not(:last-child)::after {
+    content: ', '
+
+}

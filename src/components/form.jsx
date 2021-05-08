@@ -24,6 +24,7 @@ export function Form({children, id}) {
         setIsSending(true);
 
         const data = new FormData(event.target);
+        const dispatchAction = actions[id];
 
         // validate all form input entries 
         for (let [key, value] of data.entries()) {
@@ -35,8 +36,10 @@ export function Form({children, id}) {
         if (!hasClientSideErr) {
             const url = isLast ? `${baseURL}${import.meta.env.VITE_API_SUMMARY}` : `${baseURL}${import.meta.env.VITE_API_VALIDATE}`;
             const plainFormData = isLast ? { ...cleanObj(ctxInputValues), pass: true } : Object.fromEntries(data.entries());
-            // process Switch differently than other native form inputs
+            
             if (id === actions.FEATURES) {
+                // process Switch differently than other native form inputs
+                dispatch({ type: dispatchAction, payload: cleanObj(inputValues) });
                 // progress to the next step directly (simulate 1s delay)
                 setTimeout(() => {
                     setIsSending(false);
@@ -63,7 +66,7 @@ export function Form({children, id}) {
                             dispatch({ type: actions.SUMMARY });
                         } else {
                             setInputValues({ ...inputValues, ...processedData });
-                            dispatch({ type: actions[id], payload: processedData });
+                            dispatch({ type: dispatchAction, payload: processedData });
                             // progress to the next step
                             setTimeout(() => {
                                 dispatch({ type: actions.NEXT, payload: step })
