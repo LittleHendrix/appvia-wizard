@@ -1,0 +1,46 @@
+
+.form-row:not(:last-child) {
+    margin-bottom: 1em;
+}
+
+.form-row .field-container {
+    display: flex;
+    flex-flow: column nowrap;
+}
+
+.form-row .field-container.checkbox {
+    flex-flow: row-reverse nowrap;
+    align-items: center;
+    justify-content: flex-start;
+}
+
+.form-row .field-container.row {
+    flex-flow: column nowrap;
+}
+
+.form-row .field-container.checkbox .label-container {
+    flex-basis: calc(100% - 30px);
+}
+
+.form-row .field-container:not(.checkbox) label:after {
+    content: ':'
+}
+
+.form-row label + sup {
+    color: red;
+    font-size: smaller;
+}
+
+.form-row input.error {
+    border-color: var(--error);
+}
+
+.form-row span.error {
+    display: block;
+    color: var(--error);
+    padding: 0.5em 0;
+}
+
+.form-row #prev {
+    margin-right: 8px;
+}
