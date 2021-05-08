@@ -1,7 +1,7 @@
 import React from 'react';
 import { useForm } from '../context';
 import { actions, formFields, fetchOpts } from '../config/appConfig';
-import { validate, cleanObj } from './formHelpers';
+import { validate, cleanObj, checkClientSideErrors, messenger } from './formHelpers';
 
 export function Form({children, id}) {
     const { state, dispatch } = useForm();
@@ -15,9 +15,7 @@ export function Form({children, id}) {
         dispatch({ type: actions.ERROR, payload: { key, value: errMsg }});
     }
     // find if any errors exists for inputs in the current form
-    const formErr = [...errors.entries()]
-        .filter(([key, errMsg]) => Object.keys(inputValues).includes(key) && errMsg !== '' && !errMsg.toLowerCase().includes('server'));
-    const hasClientSideErr = formErr.length > 0;
+    let hasClientSideErr = checkClientSideErrors(errors, ctxInputValues);
 
     const baseURL = `http://localhost:9000${import.meta.env.BASE_URL}`;
     
@@ -32,7 +30,8 @@ export function Form({children, id}) {
             const validationSchema = userFormFields.find(f => f.id === key).validationSchema;
             if (validationSchema) validate(key, value, validationSchema, dispatchErrors);
         }
-        
+        // update clientSideErr after calling validate
+        hasClientSideErr = checkClientSideErrors(errors, ctxInputValues);
         if (!hasClientSideErr) {
             const url = isLast ? `${baseURL}${import.meta.env.VITE_API_SUMMARY}` : `${baseURL}${import.meta.env.VITE_API_VALIDATE}`;
             const plainFormData = isLast ? { ...cleanObj(ctxInputValues), pass: true } : Object.fromEntries(data.entries());
@@ -59,6 +58,7 @@ export function Form({children, id}) {
                     if (isValid || success) {
                         setIsSending(false);
                         dispatchErrors('name', '');
+                        messenger('success', 'Update successful', { duration: 1 });
                         if (isLast) {
                             dispatch({ type: actions.SUMMARY });
                         } else {
@@ -72,6 +72,8 @@ export function Form({children, id}) {
                     }
                 }).catch(err => {
                     console.error(err);
+                    setIsSending(false);
+                    messenger('error', err.message, { duration: 2 });
                     dispatchErrors('name', err.message);
                 });
             }
@@ -113,12 +115,13 @@ export function Form({children, id}) {
                 return response.json()
             }).then(jsonRes => {
                 const { isSetable } = jsonRes;
-                console.log(`is ${key} Setable? `, isSetable)
                 setIsEnabling(false);
                 dispatchErrors(key, '');
+                messenger('success', 'Update successful', { duration: 1 });
                 setInputValues({ ...inputValues, [key]: isSetable });
             }).catch(err => {
                 console.error(err);
+                messenger('error', err.message, { duration: 2 });
                 dispatchErrors(key, err.message);
             });
         }

@@ -8,6 +8,7 @@ import 'antd/dist/antd.css';
 
 function App() {
   const { Header, Content } = Layout;
+
   return (
     <div className="App">
       <Layout>

@@ -10,10 +10,10 @@ export function reducer(state, action) {
             return { ...state, done: true };
         case actions.REVIEW:
             return { ...state, isLast: true };
-            // return {...state, inputValues: { ...state.inputValues, ...Object.fromEntries(action.payload)} };
-        case actions.USER:
-        case actions.FEATURES:
-            return {...state, inputValues: { ...state.inputValues, ...action.payload } };
+            case actions.USER:
+            case actions.FEATURES:
+                return {...state, inputValues: { ...state.inputValues, ...action.payload } };
+                // return {...state, inputValues: { ...state.inputValues, ...Object.fromEntries(action.payload)} };
         case actions.ERROR:
             // overwrite prev errors Map so React can compare state correctly
             return { ...state, errors: new Map(state.errors.set(action.payload.key, action.payload.value)) };

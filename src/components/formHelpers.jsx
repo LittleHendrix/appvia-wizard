@@ -1,3 +1,4 @@
+import { message } from 'antd';
 
 /**
  * 
@@ -37,4 +38,17 @@ export const cleanObj = (obj, rule = '') => {
         }
     }
     return objCp;
+}
+
+export const messenger = (type = 'info', msg = '', opts = {}) => {
+    message[type]({
+        content: msg,
+        ...opts
+    });
+}
+
+export const checkClientSideErrors = (errors = new Map(), inputValues = {}) => {
+    const formErr = [...errors.entries()]
+        .filter(([key, errMsg]) => Object.keys(inputValues).includes(key) && errMsg !== '' && !errMsg.toLowerCase().includes('server'));
+    return formErr.length > 0;
 }
