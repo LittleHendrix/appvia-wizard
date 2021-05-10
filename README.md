@@ -52,6 +52,7 @@ npm start
 
 - [React](https://reactjs.org/) - JavaScript library for building user interfaces
 - [Vite](https://vitejs.dev/) - Vite next generation frontend tooling
+- [Express](https://expressjs.com/) - Fast, unopinionated, minimalist web framework for [Node.js](https://nodejs.org/en/)
 
 
 ## Updating configuration
@@ -68,6 +69,6 @@ To add additional input field to a step. Simple insert a new input field object 
 To add additional steps to the form. Simple insert a new key and a corresponding page object to `pages (~/config/appConfig.js)`. A page object must contain the following properties:
 
 ```
-key: { step: number, id: string, label: string }
+key: { step: number, id: string, label: string, description: string }
 ```
 __note:__ make sure the `key` and `id` prop match. 
