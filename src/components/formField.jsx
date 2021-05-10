@@ -32,16 +32,18 @@ export const FormField = ({ id, label, type, required, error, value, onChangeHan
 
   return (
     <div className="form-row">
-      <div className={isSwitch ? 'field-container checkbox' : 'field-container'} data-testid={`${id}-input`}>
+      <div className={isSwitch ? 'field-container reverse' : 'field-container'} data-testid={`${id}-input`}>
         <div className="label-container">
           {id === 'name'
             ? <Tooltip title="Name must not exceed 63 characters in length"><label htmlFor={id}>{label}</label></Tooltip> 
             : <label htmlFor={id}>{label}</label>}
           {required && <sup>*</sup>}
         </div>
-        <Field {...fieldProps} />
+        <div className="input-container">
+          <Field {...fieldProps} />
+          {error && <Alert message={error.msg} type="error" showIcon data-testid={`${id}-error`} />}
+        </div>
       </div>
-      {error && <Alert message={error.msg} type="error" showIcon data-testid={`${id}-error`} />}
     </div>
   )
 }

@@ -3,26 +3,38 @@
     margin-bottom: 1em;
 }
 
-.form-row .field-container {
+.field-container {
     display: flex;
-    flex-flow: column nowrap;
+    flex-flow: row nowrap;
 }
 
-.form-row .field-container.checkbox {
+.field-container.reverse {
     flex-flow: row-reverse nowrap;
     align-items: center;
     justify-content: flex-end;
 }
 
-.form-row .field-container.row {
-    flex-flow: column nowrap;
+.field-container .label-container {
+    flex: 0 0 20%;
 }
 
-.form-row .field-container.checkbox .label-container {
-    margin-left: 8px
+.field-container.reverse .label-container {
+    flex: 1 1 80%;
 }
 
-.form-row .field-container:not(.checkbox) label:after {
+.field-container .input-container {
+    flex: 1 1 calc(100% - 54px);
+}
+
+.field-container.reverse .input-container {
+    flex: 0 0 54px;
+}
+
+.input-container .ant-alert-error {
+    margin-top: 6px;
+}
+
+.form-row .field-container:not(.reverse) label:after {
     content: ':'
 }
 
@@ -33,12 +45,6 @@
 
 .form-row input.error {
     border-color: var(--error);
-}
-
-.form-row span.error {
-    display: block;
-    color: var(--error);
-    padding: 0.5em 0;
 }
 
 .form-row #prev {
